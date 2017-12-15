@@ -57,8 +57,8 @@ func (o tagOptions) contains(optionName string) bool {
 //end -----------------------------------------------------------------------
 
 //Types Interface used for omitting field when empty
-type IValid interface {
-	IsValid() bool
+type INull interface {
+	IsNull() bool
 }
 
 func truncateLastComma(jsonData *bytes.Buffer) {
@@ -143,8 +143,8 @@ func getJSONLoop(v reflect.Value, jsonData *bytes.Buffer, jsonTag string) error 
 				writeValueWithoutTag(jsonData, v.Addr().Interface())
 			} else if tagOpt.contains("omitempty") {
 				//struct field - with tag name and omitempty
-				valid, ok := v.Addr().Interface().(IValid)
-				if ok && valid.IsValid() {
+				valid, ok := v.Addr().Interface().(INull)
+				if ok && valid.IsNull() {
 					writeValue(jsonData, tag, v.Addr().Interface())
 				}
 			} else if len(tag) > 0 {
