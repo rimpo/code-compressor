@@ -144,7 +144,7 @@ func getJSONLoop(v reflect.Value, jsonData *bytes.Buffer, jsonTag string) error 
 			} else if tagOpt.contains("omitempty") {
 				//struct field - with tag name and omitempty
 				valid, ok := v.Addr().Interface().(INull)
-				if ok && valid.IsNull() {
+				if ok && !valid.IsNull() {
 					writeValue(jsonData, tag, v.Addr().Interface())
 				}
 			} else if len(tag) > 0 {
