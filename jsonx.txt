@@ -1,3 +1,4 @@
+
 package jsonx
 
 //Auto-generated code; DONT EDIT THIS CODE
@@ -10,7 +11,7 @@ import (
 	"reflect"
 	"strings"
 
-	"%s/null"
+	"gitlab.com/shaadi/profile-api/pkg/null"
 )
 
 const (
@@ -102,6 +103,16 @@ func Marshal(src interface{}, jsonData *bytes.Buffer) {
 
 func getJSONLoop(v reflect.Value, jsonData *bytes.Buffer, jsonTag string) error {
 	switch v.Type().Kind() {
+	case reflect.Map:
+		m, ok := v.Addr().Interface().(json.Marshaler)
+		if !ok {
+			return fmt.Errorf("Failed interface conversion to json.Marshaler")
+		}
+		b, err := m.MarshalJSON()
+		if err != nil {
+			return fmt.Errorf("Failed to MarshalJSON %v", err)
+		}
+		jsonData.Write(b)
 	case reflect.Slice:
 		tag, tagOpt := parseTag(jsonTag)
 		//only if json tag exist processing is done
@@ -195,3 +206,4 @@ func getJSONLoop(v reflect.Value, jsonData *bytes.Buffer, jsonTag string) error 
 	}
 	return nil
 }
+

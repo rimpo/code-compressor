@@ -1,12 +1,15 @@
+
 package jsonx
 
 //Auto-generated code; DONT EDIT THIS CODE
 
 import (
 	"bytes"
-	"github.com/tidwall/gjson"
-	"%s/null"
 	"testing"
+
+	"github.com/tidwall/gjson"
+	"gitlab.com/shaadi/profile-api/pkg/null"
+	"gitlab.com/shaadi/profile-api/pkg/typ"
 )
 
 func TestNullBuiltInTypes(t *testing.T) {
@@ -51,8 +54,9 @@ func TestNullBuiltInTypes(t *testing.T) {
 }
 
 type Photo struct {
-	Url null.String `json:"url"`
-	ID  null.Int    `json:"id"`
+	Url   null.String `json:"url"`
+	Sizes typ.JsonMap
+	ID    null.Int `json:"id"`
 }
 
 type testProfile struct {
@@ -78,9 +82,15 @@ func fillDummyData(p *testProfile) {
 	var ph Photo
 	ph.Url.Set("./test/abc")
 	ph.ID.Set(1)
+	ph.Sizes = make(map[string]string)
+	ph.Sizes["20x20"] = "asdklfjksd"
+	ph.Sizes["20x40"] = "949203840"
 	p.PhotoDetails.Photos = append(p.PhotoDetails.Photos, ph)
 	ph.Url.Set("./test/xyz")
 	ph.ID.Set(2)
+	ph.Sizes = make(map[string]string)
+	ph.Sizes["30x20"] = "asdklfjksd"
+	ph.Sizes["40x40"] = "949203840"
 	p.PhotoDetails.Photos = append(p.PhotoDetails.Photos, ph)
 	p.Traits.AboutMe.Set("Hi.. I'm a professional, independent and successful woman who would love to have that special person sharing my life and vice versa. My work life is not my only life by any means.... my passion for travel has taken me to many destinations far and wide to explore new things, people and places. I am physically fit, mentally astute and spiritually inclined having explored the magic of yoga. I am an active person with a zest for life enjoying all the various facets it has to offer. \r\nI am looking for an intelligent, good looking, strong minded and genuine guy ready for a committment who will enrich my life and vice versa (not talking about money here... though wouldn't say no!!!). \r\nIf you think you can be my inter-dependent partner... potentially... then no doubt you will reply back........ lets explore life together!!!!!! \r\n (for a response, would appreciate a photo - thanks!).")
 }
@@ -96,3 +106,4 @@ func TestMarshal(t *testing.T) {
 		t.Errorf("Json output is empty")
 	}
 }
+
