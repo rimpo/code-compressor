@@ -1,4 +1,3 @@
-
 package jsonx
 
 //Auto-generated code; DONT EDIT THIS CODE
@@ -169,14 +168,18 @@ func getJSONLoop(v reflect.Value, jsonData *bytes.Buffer, jsonTag string) error 
 			//only if json tag exist processing is done
 			if len(tag) > 0 {
 				var jsonDataStruct bytes.Buffer
-				//write key for json
 				var jsonKey bytes.Buffer
-				if tag == ignoreTagName {
-					jsonKey.WriteString("{")
-				} else {
-					jsonKey.WriteString(`"`)
-					jsonKey.WriteString(tag)
-					jsonKey.WriteString(`":{`)
+
+				//write key for json
+				//check for ignore export flag
+				if !tagOpt.contains("ignore") {
+					if tag == ignoreTagName {
+						jsonKey.WriteString("{")
+					} else {
+						jsonKey.WriteString(`"`)
+						jsonKey.WriteString(tag)
+						jsonKey.WriteString(`":{`)
+					}
 				}
 				jsonDataStruct.WriteString(jsonKey.String())
 				//each field
@@ -192,7 +195,10 @@ func getJSONLoop(v reflect.Value, jsonData *bytes.Buffer, jsonTag string) error 
 				}
 				truncateLastComma(&jsonDataStruct)
 
-				jsonDataStruct.WriteString("}")
+				//check for ignore export flag
+				if !tagOpt.contains("ignore") {
+					jsonDataStruct.WriteString("}")
+				}
 
 				//omitempty struct should not show if the struct is empty
 				if tagOpt.contains("omitempty") && jsonDataStruct.Len() == jsonKey.Len()+1 {
@@ -206,4 +212,3 @@ func getJSONLoop(v reflect.Value, jsonData *bytes.Buffer, jsonTag string) error 
 	}
 	return nil
 }
-

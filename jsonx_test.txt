@@ -1,4 +1,3 @@
-
 package jsonx
 
 //Auto-generated code; DONT EDIT THIS CODE
@@ -107,3 +106,84 @@ func TestMarshal(t *testing.T) {
 	}
 }
 
+func TestIgnore1(t *testing.T) {
+	type A struct {
+		X null.String `json:"x"`
+		B struct {
+			Y null.Int `json:"y"`
+			C struct {
+				Z null.Float64 `json:"z"`
+			} `json:"c,ignore"`
+		} `json:"b"`
+	}
+
+	var a A
+	a.X.Set("X")
+	a.B.Y.Set(10)
+	a.B.C.Z.Set(50.320924)
+
+	var jsonData bytes.Buffer
+	Marshal(&a, &jsonData)
+
+	j := jsonData.String()
+
+	x := gjson.Get(j, "x")
+
+	if x.String() != a.X.Get() {
+		t.Errorf("Expected:%v Got:%v", a.X.Get(), x.String())
+	}
+
+	y := gjson.Get(j, "b.y")
+
+	if y.Int() != int64(a.B.Y.Get()) {
+		t.Errorf("Expected:%v Got:%v", a.B.Y.Get(), y.Int())
+	}
+
+	z := gjson.Get(j, "b.z")
+
+	if z.Float() != a.B.C.Z.Get() {
+		t.Errorf("Expected:%v Got:%v", a.B.C.Z.Get(), z.Float())
+	}
+
+}
+
+func TestIgnore2(t *testing.T) {
+	type A struct {
+		X null.String `json:"x"`
+		B struct {
+			Y null.Int `json:"y"`
+			C struct {
+				Z null.Float64 `json:"z"`
+			} `json:"c,ignore"`
+		} `json:"b,ignore"`
+	}
+
+	var a A
+	a.X.Set("X")
+	a.B.Y.Set(10)
+	a.B.C.Z.Set(50.320924)
+
+	var jsonData bytes.Buffer
+	Marshal(&a, &jsonData)
+
+	j := jsonData.String()
+
+	x := gjson.Get(j, "x")
+
+	if x.String() != a.X.Get() {
+		t.Errorf("Expected:%v Got:%v", a.X.Get(), x.String())
+	}
+
+	y := gjson.Get(j, "y")
+
+	if y.Int() != int64(a.B.Y.Get()) {
+		t.Errorf("Expected:%v Got:%v", a.B.Y.Get(), y.Int())
+	}
+
+	z := gjson.Get(j, "z")
+
+	if z.Float() != a.B.C.Z.Get() {
+		t.Errorf("Expected:%v Got:%v", a.B.C.Z.Get(), z.Float())
+	}
+
+}
